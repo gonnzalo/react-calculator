@@ -1,0 +1,10 @@
+.keypad {
+  display: grid;
+  grid-template: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
+  width: 350px;
+}
+.btns {
+  font-size: 2rem;
+  padding: 1rem;
+}
