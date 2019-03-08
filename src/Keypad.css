@@ -2,9 +2,73 @@
   display: grid;
   grid-template: 1fr 1fr 1fr 1fr;
   grid-template-columns: repeat(4, 1fr);
-  width: 350px;
+  height: 500px;
+  width: 400px;
 }
+
+@media all and (max-width: 480px) {
+  .keypad {
+    width: 100%;
+    height: calc(100% - 140px);
+  }
+}
+
 .btns {
+  font-family: "Play", sans-serif;
   font-size: 2rem;
   padding: 1rem;
+  color: rgb(26, 26, 26);
+  border: none;
+  background-color: rgb(228, 225, 225);
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 0rem 0rem 0.1rem rgba(0, 0, 0, 0.082);
+  transition: 0.4s;
+}
+
+.btns:hover,
+.btns:active {
+  opacity: 0.9;
+  color: #e3eee1;
+  background-color: rgb(47, 47, 47);
+}
+
+.border-rigth {
+  border-radius: 0px 0px 5px 0px;
+}
+.border-left {
+  border-radius: 0px 0px 0px 5px;
+}
+
+@media all and (max-width: 480px) {
+  .border-rigth {
+    border-radius: 0px;
+  }
+  .border-left {
+    border-radius: 0px;
+  }
+}
+
+.equal {
+  background-color: rgb(216, 111, 63);
+  color: rgb(245, 245, 245);
+}
+
+.operators {
+  background-color: rgba(34, 133, 190, 0.877);
+  color: rgb(221, 221, 221);
+}
+
+.reset {
+  background-color: rgb(212, 212, 212);
+  color: rgb(184, 0, 0);
+}
+
+.others {
+  background-color: rgb(212, 212, 212);
+}
+
+.reset:hover {
+  background-color: rgb(223, 74, 74);
+  color: rgb(221, 221, 221);
 }

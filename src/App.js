@@ -43,7 +43,7 @@ class App extends Component {
     const { total, operators, period, brackets, equal } = this.state;
     const isNumber = new RegExp("^\\d+$");
 
-    if (key === "AC") {
+    if (key === "c") {
       this.setState({ total: "0", equal: true, brackets: true });
     } else if (key === "←") {
       this.setState(prevState => {
@@ -119,8 +119,10 @@ class App extends Component {
     const { total } = this.state;
     return (
       <div className="calculator-container">
-        <Display value={total} />
-        <Keypad handleClick={this.handleClick} />
+        <div className="calculator">
+          <Display value={total} />
+          <Keypad handleClick={this.handleClick} />
+        </div>
       </div>
     );
   }
