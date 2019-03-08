@@ -1,40 +1,57 @@
 import React, { Component } from "react";
+import math from "mathjs";
 import Display from "./Display";
 import Keypad from "./Keypad";
 import "./App.css";
 
 class App extends Component {
+  static sumas(result) {
+    /* Prevent error if last character is not valid */
+    try {
+      const lastChar = result.slice(-2);
+      if (
+        lastChar === "+ " ||
+        lastChar === "- " ||
+        lastChar === "* " ||
+        lastChar === "/ " ||
+        lastChar === "( "
+      ) {
+        const newStr = result.substring(0, result.length - 3);
+        return math.eval(newStr);
+      }
+      return math.eval(result);
+    } catch (error) {
+      return "ERROR";
+    }
+  }
+
   constructor(props) {
     super(props);
-
     this.state = {
       total: "0",
-      temporal: "0",
+      /* checks condition of operators, equal, bracket, period, to not repeat */
       equal: true,
       operators: false,
       period: true,
       brackets: true
-      /* do a boolean for dont press operators two times */
     };
-
     this.handleClick = this.handleClick.bind(this);
-    this.sumas = this.sumas.bind(this);
   }
 
   handleClick(event) {
     const key = event.target.value;
-    const { total } = this.state;
+    const { total, operators, period, brackets, equal } = this.state;
     const isNumber = new RegExp("^\\d+$");
 
     if (key === "AC") {
-      this.setState({ total: "0", temporal: "0", equal: true, brackets: true });
+      this.setState({ total: "0", equal: true, brackets: true });
     } else if (key === "←") {
       this.setState(prevState => {
         return { total: prevState.total.slice(0, -1) };
       });
     } else if (isNumber.test(key)) {
       this.setState(prevState => {
-        return prevState.equal
+        return equal
           ? { total: key, equal: false, operators: true, period: true }
           : { total: prevState.total + key, operators: true, period: true };
       });
@@ -44,7 +61,7 @@ class App extends Component {
         case "-":
         case "/":
         case "x":
-          if (this.state.operators) {
+          if (operators) {
             this.setState(prevState => {
               return {
                 total: `${prevState.total} ${key === "x" ? "*" : key} `,
@@ -56,7 +73,7 @@ class App extends Component {
           break;
         case "=":
           this.setState(prevState => {
-            const result = this.sumas(prevState.total);
+            const result = App.sumas(prevState.total);
             return {
               total: `${result}`,
               equal: true,
@@ -65,18 +82,18 @@ class App extends Component {
           });
           break;
         case ".":
-          if (this.state.period) {
+          if (period) {
             this.setState(prevState => {
-              return !prevState.equal
+              return !equal
                 ? { total: `${prevState.total}.`, period: false }
                 : { total: ".", equal: false, period: false };
             });
           }
           break;
         case "(":
-          if (this.state.brackets) {
+          if (brackets) {
             this.setState(prevState => {
-              return prevState.equal
+              return equal
                 ? { total: `( `, equal: false, brackets: false }
                 : { total: `${prevState.total} ( `, brackets: false };
             });
@@ -88,30 +105,20 @@ class App extends Component {
               return { total: `${prevState.total} ) `, brackets: true };
             });
           break;
+        default:
+          this.setState({
+            total: "ERROR",
+            equal: true,
+            brackets: true
+          });
       }
-  }
-
-  sumas(fn) {
-    const lastChar = fn.slice(-2);
-    if (
-      lastChar === "+ " ||
-      lastChar === "- " ||
-      lastChar === "* " ||
-      lastChar === "/ " ||
-      lastChar === "( "
-    ) {
-      const newStr = fn.substring(0, fn.length - 3);
-      return new Function(`return ${newStr}`)();
-    }
-    return new Function(`return ${fn}`)();
+    return null;
   }
 
   render() {
-    const { total, temporal } = this.state;
-
+    const { total } = this.state;
     return (
       <div className="calculator-container">
-        <Display value={temporal} />
         <Display value={total} />
         <Keypad handleClick={this.handleClick} />
       </div>
