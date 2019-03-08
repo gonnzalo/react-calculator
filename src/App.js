@@ -10,7 +10,10 @@ class App extends Component {
     this.state = {
       total: "0",
       temporal: "0",
-      equal: false
+      equal: true,
+      operators: false,
+      period: true,
+      brackets: true
       /* do a boolean for dont press operators two times */
     };
 
@@ -22,19 +25,9 @@ class App extends Component {
     const key = event.target.value;
     const { total } = this.state;
     const isNumber = new RegExp("^\\d+$");
-    if (this.state.total === "0") {
-      return !(
-        key === "+" ||
-        key === "/" ||
-        key === ")" ||
-        key === "x" ||
-        key === "="
-      )
-        ? this.setState({ total: key })
-        : {};
-    }
+
     if (key === "AC") {
-      this.setState({ total: "0", temporal: "0" });
+      this.setState({ total: "0", temporal: "0", equal: true, brackets: true });
     } else if (key === "←") {
       this.setState(prevState => {
         return { total: prevState.total.slice(0, -1) };
@@ -42,65 +35,74 @@ class App extends Component {
     } else if (isNumber.test(key)) {
       this.setState(prevState => {
         return prevState.equal
-          ? { total: key, equal: false }
-          : { total: prevState.total + key };
+          ? { total: key, equal: false, operators: true, period: true }
+          : { total: prevState.total + key, operators: true, period: true };
       });
     } else
       switch (key) {
         case "+":
-          this.setState(prevState => {
-            return {
-              total: `${prevState.total} + `,
-              equal: false
-            };
-          });
-          break;
         case "-":
-          this.setState(prevState => {
-            return { total: `${prevState.total} - `, equal: false };
-          });
-          break;
-        case "x":
-          this.setState(prevState => {
-            return { total: `${prevState.total} * `, equal: false };
-          });
-          break;
         case "/":
-          this.setState(prevState => {
-            return { total: `${prevState.total} / `, equal: false };
-          });
+        case "x":
+          if (this.state.operators) {
+            this.setState(prevState => {
+              return {
+                total: `${prevState.total} ${key === "x" ? "*" : key} `,
+                equal: false,
+                operators: false
+              };
+            });
+          }
           break;
         case "=":
           this.setState(prevState => {
             const result = this.sumas(prevState.total);
             return {
               total: `${result}`,
-              equal: true
+              equal: true,
+              brackets: true
             };
           });
           break;
         case ".":
-          this.setState(prevState => {
-            return !prevState.equal
-              ? { total: `${prevState.total}.` }
-              : { total: "." };
-          });
+          if (this.state.period) {
+            this.setState(prevState => {
+              return !prevState.equal
+                ? { total: `${prevState.total}.`, period: false }
+                : { total: ".", equal: false, period: false };
+            });
+          }
           break;
         case "(":
-          this.setState(prevState => {
-            return { total: `${prevState.total} ( ` };
-          });
+          if (this.state.brackets) {
+            this.setState(prevState => {
+              return prevState.equal
+                ? { total: `( `, equal: false, brackets: false }
+                : { total: `${prevState.total} ( `, brackets: false };
+            });
+          }
           break;
         case ")":
           if (total.includes("(") && !total.endsWith(") "))
             return this.setState(prevState => {
-              return { total: `${prevState.total} ) ` };
+              return { total: `${prevState.total} ) `, brackets: true };
             });
           break;
       }
   }
 
   sumas(fn) {
+    const lastChar = fn.slice(-2);
+    if (
+      lastChar === "+ " ||
+      lastChar === "- " ||
+      lastChar === "* " ||
+      lastChar === "/ " ||
+      lastChar === "( "
+    ) {
+      const newStr = fn.substring(0, fn.length - 3);
+      return new Function(`return ${newStr}`)();
+    }
     return new Function(`return ${fn}`)();
   }
 
