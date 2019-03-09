@@ -26,8 +26,7 @@
   transition: 0.4s;
 }
 
-.btns:hover,
-.btns:active {
+.btns:hover {
   opacity: 0.9;
   color: #e3eee1;
   background-color: rgb(47, 47, 47);
@@ -71,4 +70,45 @@
 .reset:hover {
   background-color: rgb(223, 74, 74);
   color: rgb(221, 221, 221);
+}
+
+/* delete hover effect on touch */
+@media (hover: none), (hover: on-demand) {
+  .btns:hover {
+    background: rgb(228, 225, 225);
+    opacity: 1;
+    color: rgb(26, 26, 26);
+  }
+
+  .equal:hover {
+    background-color: rgb(216, 111, 63);
+    color: rgb(245, 245, 245);
+  }
+
+  .others:hover {
+    background-color: rgb(212, 212, 212);
+  }
+
+  .operators:hover {
+    background-color: rgba(34, 133, 190, 0.877);
+    color: rgb(221, 221, 221);
+  }
+
+  .reset:hover {
+    background-color: rgb(212, 212, 212);
+    color: rgb(184, 0, 0);
+  }
+
+  .btns:active {
+    color: #e3eee1;
+    background-color: rgb(47, 47, 47);
+    box-shadow: 0.5rem 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  }
+
+  .reset:active {
+    background-color: rgb(223, 74, 74);
+    color: rgb(221, 221, 221);
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  }
 }
