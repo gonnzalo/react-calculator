@@ -26,6 +26,10 @@
   transition: 0.4s;
 }
 
+input::-moz-focus-inner {
+  border: 0;
+}
+
 .btns:hover {
   opacity: 0.9;
   color: #e3eee1;
