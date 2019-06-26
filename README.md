@@ -1,6 +1,9 @@
 # React Calculator
 
-## Demo
+![ScreenShot](https://raw.github.com/gonnzalo/personal-website/master/src/images/calculator.png)
+
+
+## Live Demo
 
 [https://calculator.gonnzalo.now.sh/](https://calculator.gonnzalo.now.sh/)
 
